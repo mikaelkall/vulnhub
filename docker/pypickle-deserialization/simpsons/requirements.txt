@@ -1,0 +1,2 @@
+couchdb==1.2
+flask

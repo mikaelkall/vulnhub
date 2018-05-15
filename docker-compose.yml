@@ -1,0 +1,30 @@
+version: '3'
+services:
+  lfi-php5:
+    build:
+      context: ./docker/lfi-php5
+      dockerfile: Dockerfile
+    ports:
+      - 8080:80
+  nodejs-deserialization:
+    build:
+      context: ./docker/nodejs-deserialization
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    network_mode: "host"
+  couchdb:
+    build:
+      context: ./docker/couchdb
+      dockerfile: Dockerfile
+    ports:
+      - 5984:5984
+    network_mode: "host"
+
+  pypickle-deserialization:
+    build:
+      context: ./docker/pypickle-deserialization
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    network_mode: "host"
