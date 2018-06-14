@@ -28,3 +28,11 @@ services:
     ports:
       - 5000:5000
     network_mode: "host"
+  
+  jenkins-docker:
+    build:
+      context: ./docker/jenkins-docker
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+
