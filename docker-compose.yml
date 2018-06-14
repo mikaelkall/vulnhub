@@ -28,7 +28,7 @@ services:
     ports:
       - 5000:5000
     network_mode: "host"
-  
+
   jenkins-docker:
     build:
       context: ./docker/jenkins-docker
@@ -36,3 +36,10 @@ services:
     ports:
       - 8080:8080
 
+  get-php:
+    build:
+      context: ./docker/get-php
+      dockerfile: Dockerfile
+    ports:
+      - 8081:80
+    network_mode: "host"
